@@ -1,13 +1,21 @@
 # Runtime dependencies.
 #
-# PyJHora is installed with --no-deps in the Dockerfile, because it declares
-# PyQt6 for its desktop UI module. This application never imports jhora.ui, so
-# pulling in Qt would add roughly 100 MB to the image for nothing. Its real
-# runtime needs are listed here instead: swisseph, geopy and pytz.
+# PyJHora is installed with --no-deps in the Dockerfile. Its published wheel
+# declares no dependencies of its own, so everything it imports has to be
+# listed here explicitly, and PyQt6 (which only its desktop UI module needs,
+# around 100 MB of Qt) stays out of the image.
+#
+# The four below are what jhora/utils.py and jhora/panchanga/drik.py import at
+# their own top level. Miss one and the application fails on import, so the
+# Docker build runs a smoke test that would catch it.
 PyJHora==4.8.7
 pyswisseph==2.10.3.2
+geocoder>=1.38          # jhora/utils.py
+python-dateutil>=2.9    # jhora/utils.py
 geopy>=2.4
 pytz>=2024.1
+certifi>=2024.2         # jhora/utils.py; also arrives via requests
+ephem>=4.1              # jhora/panchanga/drik.py, imported lazily
 
 fastapi>=0.115
 uvicorn[standard]>=0.30

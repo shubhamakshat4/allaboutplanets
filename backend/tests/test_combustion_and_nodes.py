@@ -285,3 +285,66 @@ def test_every_registered_rule_reaches_the_document():
     text = SRC.read_text(encoding="utf-8")
     missing = [r.rule_id for r in all_rules() if f"`{r.rule_id}`" not in text]
     assert not missing, f"rules absent from docs/RULES.md: {missing}"
+
+
+def test_requirements_list_every_package_jhora_imports():
+    """PyJHora is installed with --no-deps, so anything it imports at module
+    level must be named in requirements.txt or the container fails on import.
+
+    This is how a missing `geocoder` reached a deploy once. The check is static,
+    so it catches an import on a code path the tests never exercise.
+    """
+    import ast
+    import pathlib
+    import sys
+
+    req = (pathlib.Path(__file__).resolve().parents[1] / "requirements.txt")
+    listed = req.read_text(encoding="utf-8").lower()
+
+    # Distribution names differ from the module they provide.
+    PROVIDES = {
+        "swisseph": "pyswisseph",
+        "dateutil": "python-dateutil",
+        "yaml": "pyyaml",
+        "dotenv": "python-dotenv",
+    }
+
+    import jhora
+    root = pathlib.Path(jhora.__file__).parent
+    # Only the modules this application actually pulls in; jhora/ui needs PyQt6
+    # and is deliberately never imported.
+    used = {pathlib.Path(m.__file__) for name, m in sys.modules.items()
+            if name.split(".")[0] == "jhora" and getattr(m, "__file__", None)}
+    assert used, "jhora was not imported; run the suite from backend/"
+
+    missing = []
+    for f in sorted(used):
+        try:
+            tree = ast.parse(f.read_text(encoding="utf-8", errors="ignore"))
+        except SyntaxError:
+            continue
+        # Module-level statements only. An import inside a function is lazy and
+        # will not stop the container starting, so it is not required here.
+        # Descend one level into top-level try/if blocks, where guarded imports
+        # usually sit.
+        statements = []
+        for stmt in tree.body:
+            statements.append(stmt)
+            for attr in ("body", "orelse", "finalbody"):
+                statements.extend(getattr(stmt, attr, []) or [])
+
+        for node in statements:
+            names = []
+            if isinstance(node, ast.Import):
+                names = [a.name.split(".")[0] for a in node.names]
+            elif isinstance(node, ast.ImportFrom) and node.level == 0 and node.module:
+                names = [node.module.split(".")[0]]
+            for n in names:
+                if n in sys.stdlib_module_names or n == "jhora":
+                    continue
+                if PROVIDES.get(n, n).lower() not in listed:
+                    missing.append(f"{n} (imported by {f.name})")
+
+    assert not missing, (
+        "these are imported by PyJHora but absent from requirements.txt, so the "
+        f"container would fail on import: {sorted(set(missing))}")

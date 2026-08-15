@@ -46,6 +46,25 @@ COPY --from=frontend /app/frontend/dist frontend/dist
 # expects it. main.py reports frontend_bundled on /health for the same reason.
 RUN test -f frontend/dist/index.html
 
+# Import the app and calculate a chart at build time.
+#
+# Because PyJHora is installed with --no-deps, a package it imports but which
+# requirements.txt forgets would otherwise only surface when the container
+# starts, as a failed deploy. Exercising the real path here turns that into a
+# failed build, which is far cheaper to diagnose.
+RUN cd backend && python -c "\
+from app.main import app; \
+from app.astrology import pyjhora_adapter as ad; \
+from app.astrology.chart_calculator import build_chart_context; \
+from app.astrology.planet_analyzer import analyze_planet; \
+from app.astrology import dosha_engine, yoga_engine; \
+ctx = build_chart_context(ad.julian_day(1994, 8, 14, 11, 45, 0), \
+                          ad.BirthPlace('smoke', 26.7, 85.9, 5.75), 'LAHIRI'); \
+a = analyze_planet(ctx, 4); \
+dosha_engine.evaluate_all_doshas(ctx); \
+assert a['findings']['counts'], 'no findings produced'; \
+print('smoke test OK:', a['planetName'], a['summary']['rashi'])"
+
 # Run as a non-root user.
 RUN useradd --create-home --uid 10001 appuser \
  && chown -R appuser:appuser /app
