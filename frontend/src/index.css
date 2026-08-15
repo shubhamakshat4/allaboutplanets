@@ -1,0 +1,82 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Nunito:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root { color-scheme: light; }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply text-ink-800 font-sans;
+    background:
+      radial-gradient(1100px 620px at 8% -8%, #ffe9c9 0%, transparent 58%),
+      radial-gradient(900px 560px at 96% 4%, #d9e4ff 0%, transparent 55%),
+      radial-gradient(800px 500px at 50% 105%, #ffe0ea 0%, transparent 58%),
+      #fffdf8;
+    background-attachment: fixed;
+    min-height: 100vh;
+  }
+
+  /* Written as plain CSS rather than @apply. An @apply of a custom colour with
+     an opacity modifier resolves against the Tailwind config at build time,
+     which makes base styles fail to compile whenever the config and the dev
+     server fall out of step. These two rules are load-bearing, so they are
+     kept independent of that. */
+  ::selection {
+    background-color: rgb(251 191 36 / 0.4);
+    color: #211f1b;
+  }
+
+  *:focus-visible {
+    outline: none;
+    border-radius: 0.5rem;
+    box-shadow: 0 0 0 3px rgb(251 191 36 / 0.6);
+  }
+}
+
+@layer components {
+  .tabular { font-variant-numeric: tabular-nums; }
+
+  .label {
+    @apply text-[11px] font-bold uppercase tracking-[0.09em] text-ink-400;
+  }
+
+  /* Frosted card used across the app */
+  .panel {
+    @apply rounded-xl2 border border-white/70 bg-white/80 shadow-card backdrop-blur-sm;
+  }
+}
+
+/* --- Print --------------------------------------------------------------- */
+@media print {
+  @page { size: A4; margin: 14mm 12mm; }
+
+  body {
+    background: #fff !important;
+    font-size: 10pt;
+  }
+
+  .no-print { display: none !important; }
+  .print-only { display: block !important; }
+
+  .print-open { display: block !important; height: auto !important; }
+
+  .panel {
+    box-shadow: none !important;
+    border: 1px solid #ddd !important;
+    background: #fff !important;
+    backdrop-filter: none !important;
+  }
+
+  .print-avoid-break { break-inside: avoid; }
+  tr, li { break-inside: avoid; }
+  thead { display: table-header-group; }
+}
+
+.print-only { display: none; }

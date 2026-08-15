@@ -1,0 +1,35 @@
+# --- Python ---------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# --- Node / frontend ------------------------------------------------------
+node_modules/
+dist/
+.vite/
+*.local
+npm-debug.log*
+yarn-error.log*
+
+# --- Generated documents --------------------------------------------------
+# RULES.md and RULES.pdf are committed on purpose: they are the rule reference
+# an astrologer reads, and a test fails if the Markdown drifts from the code.
+# The intermediate HTML the PDF is rendered from is not worth tracking.
+docs/RULES.html
+docs/*.tmp.pdf
+
+# --- Editors / OS ---------------------------------------------------------
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+desktop.ini
