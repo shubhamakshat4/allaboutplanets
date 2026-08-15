@@ -1,0 +1,23 @@
+# Keep the build context small and reproducible.
+.git
+.gitignore
+**/node_modules
+**/dist
+**/__pycache__
+**/*.py[cod]
+**/.pytest_cache
+**/.mypy_cache
+**/.ruff_cache
+.venv
+venv
+
+# Generated locally; the image does not need them.
+docs/RULES.html
+docs/*.tmp.pdf
+
+# Editors / OS
+.vscode
+.idea
+.DS_Store
+Thumbs.db
+desktop.ini

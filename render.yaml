@@ -1,0 +1,11 @@
+# Render Blueprint. With this file in the repo you can deploy from
+# Render > New > Blueprint instead of filling the form by hand.
+services:
+  - type: web
+    name: planetary-status-analyzer
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: free
+    healthCheckPath: /health
+    autoDeploy: true

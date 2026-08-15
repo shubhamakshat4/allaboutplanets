@@ -1,0 +1,7 @@
+# Everything needed to run the test suite and regenerate the rule documents.
+-r requirements.txt
+
+pytest>=8.0
+httpx>=0.27          # required by fastapi.testclient
+markdown2>=2.4       # docs/RULES.md -> HTML, for the PDF
+pymupdf>=1.24        # page numbers, bookmarks and the PDF drift check
