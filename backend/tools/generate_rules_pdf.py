@@ -11,6 +11,7 @@ which is also readable on its own).
 """
 from __future__ import annotations
 
+import hashlib
 import os
 import re
 import shutil
@@ -201,6 +202,13 @@ def build_toc(body_md: str) -> str:
     )
 
 
+def source_fingerprint() -> str:
+    """SHA-256 of RULES.md. Stamped into the PDF and the HTML so a later check
+    can tell whether either was rendered from the current Markdown, without
+    needing a browser to re-render them."""
+    return hashlib.sha256(SRC.read_bytes()).hexdigest()
+
+
 def render_html() -> str:
     md = SRC.read_text(encoding="utf-8")
     title, intro_md, body_md = split_front_matter(md)
@@ -227,6 +235,7 @@ def render_html() -> str:
 <head>
 <meta charset="utf-8">
 <title>{title}</title>
+<meta name="source-sha256" content="{source_fingerprint()}">
 <style>{CSS}</style>
 </head>
 <body>
@@ -318,6 +327,12 @@ def finish(pdf_path: Path) -> None:
 
     doc = pymupdf.open(pdf_path)
     total = doc.page_count
+
+    # Record which Markdown this was rendered from.
+    meta = doc.metadata or {}
+    meta["keywords"] = f"rules-source-sha256={source_fingerprint()}"
+    meta["subject"] = "Rules used by the Planetary Status Analyzer"
+    doc.set_metadata(meta)
 
     # --- bookmarks, from the section headings actually laid out on each page
     outline = []

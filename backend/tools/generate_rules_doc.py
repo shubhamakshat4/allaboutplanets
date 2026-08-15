@@ -258,13 +258,38 @@ def build() -> str:
         "grouped favourably; from a natural malefic, as a difficulty.")
     add("")
 
-    add("### How the three groups are filled `[NATURE_007]` `[NATURE_008]`")
+    add("### How the groups are filled `[NATURE_007]` `[NATURE_008]` "
+        "`[NATURE_009]` `[NATURE_010]`")
     add("")
     add("Every graha is put through the same list of checks, so the same "
         "points appear for all nine. A check that cannot apply to a body still "
-        "appears, saying so, and sits in the neutral group. The findings are "
-        "never added up into a score or an overall judgement of the planet; "
-        "the number beside each group is simply how many points fall in it.")
+        "appears, saying so.")
+    add("")
+    add("The findings are sorted into six groups:")
+    add("")
+    add(table(
+        ["Group", "Holds"],
+        [("Strengths", "Placements the classics count as favourable"),
+         ("Yogas formed", "Yogas this graha takes part in"),
+         ("Challenges", "Placements the classics count as difficult"),
+         ("Doshas formed", "Doshas this graha takes part in"),
+         ("Your call",
+          "Points the classics leave open. Kept apart from the neutral ones "
+          "so a real disagreement is never mistaken for a routine 'does not "
+          "apply'. The reason is given on the Explain panel."),
+         ("Neutral & not applicable",
+          "Checks that came out on neither side, and checks that cannot bear "
+          "on this graha at all. Each bullet says which of the two it is.")]))
+    add("")
+    add("The findings are never added up into a score or an overall judgement "
+        "of the planet. The number beside each group is simply how many points "
+        "fall in it.")
+    add("")
+    add("These are the situations placed in **Your call**:")
+    add("")
+    add(table(
+        ["Situation", "Why it is left open"],
+        [(k.replace("_", " ").title(), v) for k, v in cr.CONTESTED.items()]))
     add("")
     add("---")
     add("")

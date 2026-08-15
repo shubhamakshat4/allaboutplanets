@@ -516,12 +516,21 @@ _NATURE = [
      "still produces its bullet, stating that it does not apply, and is "
      "grouped neutral.",
      "One bullet per check for every planet"),
+    ("NATURE_010", "The six groups a finding can fall into",
+     "Findings are sorted into six groups. Strengths holds placements the "
+     "classics count as favourable, and Challenges those they count as "
+     "difficult. Yogas and doshas are pulled out into groups of their own so "
+     "they can be read without hunting, yogas carrying the favourable colour "
+     "and doshas the difficult one. Points the classics leave open form their "
+     "own group. What remains is neutral or not applicable, and each of those "
+     "bullets says which of the two it is.",
+     "Six groups: strengths, yogas, challenges, doshas, open points, neutral"),
     ("NATURE_009", "Points left to the astrologer",
-     "The yellow group holds three different kinds of point, and each bullet "
-     "says which it is. 'Does not apply' means the check cannot bear on that "
-     "body at all. 'Neutral' means the rule ran and came out on neither side. "
-     "'Your call' means the classics genuinely differ, or two rules pull "
-     "against each other, and the software will not decide for you. The "
+     "Points the classics leave open are shown in a group of their own rather "
+     "than mixed in with the neutral ones, so a genuine disagreement is never "
+     "mistaken for a routine 'does not apply'. A point is placed there when "
+     "the classics genuinely differ, or when two rules pull against each "
+     "other, and the software will not decide for you. The "
      "situations treated as open are: the exaltation of Rahu and Ketu, which "
      "the classics do not fix; a graha holding both an auspicious and an "
      "inauspicious lordship; a natural malefic lording both a Kendra and a "
@@ -530,7 +539,7 @@ _NATURE = [
      "to take the character of their associations; a Neecha Bhanga where only "
      "some conditions are met; and Vargottama in a debilitated graha. Each "
      "carries its reason on the Explain panel.",
-     "Yellow, with the kind and the reason shown"),
+     "Its own group, with the reason shown on the Explain panel"),
     ("NATURE_008", "No aggregate verdict",
      "The findings are never combined into a score, a rating or an overall "
      "judgement of the planet. The count shown against each group is simply "

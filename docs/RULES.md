@@ -156,9 +156,35 @@ A retrograde graha stands near the earth and gains Cheshta Bala. The formulation
 
 A conjunction with, or an aspect received from, a natural benefic is grouped favourably; from a natural malefic, as a difficulty.
 
-### How the three groups are filled `[NATURE_007]` `[NATURE_008]`
+### How the groups are filled `[NATURE_007]` `[NATURE_008]` `[NATURE_009]` `[NATURE_010]`
 
-Every graha is put through the same list of checks, so the same points appear for all nine. A check that cannot apply to a body still appears, saying so, and sits in the neutral group. The findings are never added up into a score or an overall judgement of the planet; the number beside each group is simply how many points fall in it.
+Every graha is put through the same list of checks, so the same points appear for all nine. A check that cannot apply to a body still appears, saying so.
+
+The findings are sorted into six groups:
+
+| Group | Holds |
+|---|---|
+| Strengths | Placements the classics count as favourable |
+| Yogas formed | Yogas this graha takes part in |
+| Challenges | Placements the classics count as difficult |
+| Doshas formed | Doshas this graha takes part in |
+| Your call | Points the classics leave open. Kept apart from the neutral ones so a real disagreement is never mistaken for a routine 'does not apply'. The reason is given on the Explain panel. |
+| Neutral & not applicable | Checks that came out on neither side, and checks that cannot bear on this graha at all. Each bullet says which of the two it is. |
+
+The findings are never added up into a score or an overall judgement of the planet. The number beside each group is simply how many points fall in it.
+
+These are the situations placed in **Your call**:
+
+| Situation | Why it is left open |
+|---|---|
+| Node Dignity | The classics do not place Rahu and Ketu in the exaltation table. The sign used here is one tradition among several: some give Rahu exaltation in Taurus alone, others in Gemini, with Ketu placed correspondingly. Whether to read this as a strength is yours to decide. |
+| Mixed Lordship | This graha holds lordships that pull in opposite directions. The rule followed here lets the Trikona lordship prevail, but many astrologers weigh the difficult lordship more heavily, and the Kendradhipatya treatment of a Kendra lord is itself read differently by different schools. |
+| Maraka And Kendra | This graha lords a Kendra, which turns a natural malefic auspicious by Kendradhipatya, and also a Maraka house. The two pull against each other and the classics do not settle which prevails. |
+| Mercury Combustion | Mercury never travels far from the Sun and is combust in a great many charts. Many astrologers hold Mercury's combustion to be far less telling than that of the other grahas, especially where Budha-Aditya is formed. |
+| Node Association | Rahu and Ketu are widely held to take on the character of the graha they join, of their dispositor, or of the house they occupy. Reading an association with a node purely as a difficulty is only one view. |
+| Partial Neecha Bhanga | Some of the cancelling conditions are met and some are not. How far a partial Neecha Bhanga lifts the debilitation is one of the most argued points in the classics, and the count alone does not settle it. |
+| Vargottama Debilitated | The graha is Vargottama while debilitated. One reading is that Vargottama steadies it; another is that holding the same sign in both charts deepens the debilitation. |
+| Retrograde School | Schools differ on retrogression. Some hold that a retrograde graha is simply strengthened, some that it gives the results of the previous sign, and some that it acts contrary to its usual nature. |
 
 ---
 
@@ -539,6 +565,7 @@ Every rule in the software, for reference when reporting a correction.
 | `NATURE_007` | The fixed catalogue of checks |
 | `NATURE_008` | No aggregate verdict |
 | `NATURE_009` | Points left to the astrologer |
+| `NATURE_010` | The six groups a finding can fall into |
 | `NB_001` | Debilitation-sign lord in Kendra from Lagna |
 | `NB_002` | Debilitation-sign lord in Kendra from Moon |
 | `NB_003` | Exaltation-sign lord in Kendra from Lagna |

@@ -226,7 +226,7 @@ def test_every_rahu_ketu_rule_is_registered():
     assert "COMBUST_001" in ids
 
 
-# --- Generated rule document stays in sync ---------------------------------
+# --- Generated rule documents stay in sync ---------------------------------
 def test_rules_document_is_up_to_date():
     """docs/RULES.md is generated. If a rule changes without regenerating it,
     the document silently lies about what the code does."""
@@ -240,3 +240,48 @@ def test_rules_document_is_up_to_date():
     assert on_disk == build(), (
         "docs/RULES.md is stale. Regenerate with: python -m tools.generate_rules_doc"
     )
+
+
+def test_rules_pdf_and_html_were_rendered_from_the_current_markdown():
+    """docs/RULES.pdf and docs/RULES.html are rendered from RULES.md.
+
+    Re-rendering them needs a browser, so instead each carries the SHA-256 of
+    the Markdown it came from. Comparing that to the current file catches a
+    stale PDF without running Chrome.
+    """
+    import hashlib
+
+    from tools.generate_rules_pdf import HTML_OUT, PDF_OUT, SRC
+
+    if not SRC.exists():
+        pytest.fail("docs/RULES.md is missing. Run: python -m tools.generate_rules_doc")
+
+    expected = hashlib.sha256(SRC.read_bytes()).hexdigest()
+
+    assert HTML_OUT.exists(), "docs/RULES.html is missing"
+    html = HTML_OUT.read_text(encoding="utf-8")
+    assert f'content="{expected}"' in html, (
+        "docs/RULES.html is stale. Regenerate with: python -m tools.generate_rules_pdf")
+
+    assert PDF_OUT.exists(), "docs/RULES.pdf is missing"
+    try:
+        import pymupdf
+    except ImportError:
+        pytest.skip("PyMuPDF not installed; cannot read the PDF fingerprint")
+
+    doc = pymupdf.open(PDF_OUT)
+    stamped = (doc.metadata or {}).get("keywords", "")
+    doc.close()
+    assert stamped == f"rules-source-sha256={expected}", (
+        "docs/RULES.pdf is stale. Regenerate with: python -m tools.generate_rules_pdf")
+
+
+def test_every_registered_rule_reaches_the_document():
+    """A rule that exists in code but never appears in the reference document
+    is invisible to the astrologer reviewing it."""
+    from app.astrology.rules.registry import all_rules
+    from tools.generate_rules_pdf import SRC
+
+    text = SRC.read_text(encoding="utf-8")
+    missing = [r.rule_id for r in all_rules() if f"`{r.rule_id}`" not in text]
+    assert not missing, f"rules absent from docs/RULES.md: {missing}"
