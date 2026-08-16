@@ -595,6 +595,30 @@ def _strength(ctx, planet, name) -> List[dict]:
 
 
 # --- 10. Neecha Bhanga and yogas -------------------------------------------
+def _nb_detail(nb: dict) -> List[Dict[str, str]]:
+    """One row per cancelling condition, naming the condition rather than just
+    numbering it, so the reader can see what was actually tested."""
+    return [{"label": f"{c['number']}. {c['title']}", "value": c["status"]}
+            for c in nb["conditions"]]
+
+
+def _nb_explanation(ctx, name: str, nb: dict) -> str:
+    """The six conditions spelled out, each with what was found."""
+    lines = [
+        f"{name} is debilitated in {nb['debilitationSignName']}, whose lord is "
+        f"{nb['debilitationLordName']}. Its exaltation sign is "
+        f"{nb['exaltationSignName']}, whose lord is {nb['exaltationLordName']}. "
+        f"The classics give six conditions under which a debilitation is "
+        f"cancelled, and each is tested separately:",
+    ]
+    for c in nb["conditions"]:
+        lines.append(f"({c['number']}) {c['statement']} — {c['status']}. "
+                     f"{c['evidence']}")
+    lines.append(f"{nb['conditionsSatisfied']} of the six are met. "
+                 f"{nb['exclusionNote']}")
+    return " ".join(lines)
+
+
 def _special(ctx, planet, name) -> List[dict]:
     out = []
 
@@ -608,20 +632,15 @@ def _special(ctx, planet, name) -> List[dict]:
         out.append(_f("special-neechabhanga", FAVOURABLE,
                       f"Neecha Bhanga — {nb['conditionsSatisfied']} of 6 "
                       f"conditions met",
-                      f"{name} is debilitated, and the classics give conditions "
-                      f"under which that debilitation is cancelled. "
-                      f"{nb['conditionsSatisfied']} of the six are met here.",
-                      detail=[{"label": f"Condition {c['number']}",
-                               "value": c["status"]} for c in nb["conditions"]],
+                      _nb_explanation(ctx, name, nb),
+                      detail=_nb_detail(nb),
                       contested=("partial_neecha_bhanga"
                                  if nb["conditionsSatisfied"] < 6 else None)))
     else:
         out.append(_f("special-neechabhanga", CHALLENGING,
                       "Neecha Bhanga — no cancelling condition is met",
-                      f"{name} is debilitated and none of the six cancelling "
-                      f"conditions is satisfied.",
-                      detail=[{"label": f"Condition {c['number']}",
-                               "value": c["status"]} for c in nb["conditions"]]))
+                      _nb_explanation(ctx, name, nb),
+                      detail=_nb_detail(nb)))
 
     return out
 

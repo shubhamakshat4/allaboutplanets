@@ -348,3 +348,36 @@ def test_requirements_list_every_package_jhora_imports():
     assert not missing, (
         "these are imported by PyJHora but absent from requirements.txt, so the "
         f"container would fail on import: {sorted(set(missing))}")
+
+
+def test_review_form_covers_every_rule():
+    """docs/review-form.gs is generated. A rule missing from it is a rule the
+    astrologer is never asked to check."""
+    import json
+    import re
+
+    from tools.generate_review_form import OUT, build
+    from app.astrology.rules.registry import all_rules
+
+    if not OUT.exists():
+        pytest.fail("docs/review-form.gs is missing. "
+                    "Run: python -m tools.generate_review_form")
+
+    on_disk = OUT.read_text(encoding="utf-8")
+    assert on_disk == build(), (
+        "docs/review-form.gs is stale. "
+        "Regenerate with: python -m tools.generate_review_form")
+
+    sections = json.loads(
+        re.search(r"var SECTIONS = (\[.*?\n\]);", on_disk, re.S).group(1))
+    listed = [r["id"] for s in sections for r in s["rules"]]
+    live = [r.rule_id for r in all_rules()]
+
+    assert sorted(listed) == sorted(live), (
+        f"missing from the form: {sorted(set(live) - set(listed))}")
+    assert len(listed) == len(set(listed)), "a rule appears twice in the form"
+
+    # Two questions per rule, plus the name, tradition, and two closing boxes,
+    # plus one page break per section. Google Forms caps a form at 300 items.
+    items = len(listed) * 2 + 4 + len(sections) + 1
+    assert items < 300, f"{items} form items exceeds the Google Forms limit"

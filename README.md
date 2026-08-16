@@ -179,6 +179,24 @@ Each rule carries a tag such as `[DIGNITY_002]`. The same tags appear in the
 application's evidence panels and at `GET /api/rules`, so any value on screen
 can be traced back to the rule that produced it.
 
+### Getting the rules reviewed
+
+**[docs/review-form.gs](docs/review-form.gs)** builds a Google Form that walks
+an astrologer through every rule one at a time. Each becomes a required
+multiple-choice question with the rule stated in full, followed by an optional
+box for what should change instead. Responses collect in a linked Sheet, so
+several reviewers can be compared side by side.
+
+```bash
+cd backend
+python -m tools.generate_review_form    # rules -> docs/review-form.gs
+```
+
+Paste the result into a new project at <https://script.google.com>, run
+`buildReviewForm`, and the execution log prints the edit link, the share link
+and the responses sheet. A test fails if the form drifts from the rules, so it
+always asks about every rule that exists.
+
 ## Methodology, stated plainly
 
 `docs/PYJHORA_MAPPING.md` maps every feature to the exact PyJHora function behind it.
