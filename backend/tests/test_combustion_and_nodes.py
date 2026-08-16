@@ -1,4 +1,6 @@
 """Combustion (COMBUST_001) and the Rahu/Ketu contract (RK_001..RK_014)."""
+import pathlib
+
 import pytest
 
 from app.astrology import combustion_engine as ce
@@ -381,3 +383,25 @@ def test_review_form_covers_every_rule():
     # plus one page break per section. Google Forms caps a form at 300 items.
     items = len(listed) * 2 + 4 + len(sections) + 1
     assert items < 300, f"{items} form items exceeds the Google Forms limit"
+
+
+def test_review_form_uses_only_real_apps_script_methods():
+    """Run docs/review-form.gs against an allowlist stub of the FormApp API.
+
+    A permissive stub accepted setShowLinkToRespondAnother, which is not a real
+    method, and the script failed only once Google ran it. The validator this
+    calls rejects any method the API does not publish.
+    """
+    import shutil
+    import subprocess
+
+    node = shutil.which("node")
+    if node is None:
+        pytest.skip("node is not installed; cannot validate the Apps Script")
+
+    script = pathlib.Path(__file__).resolve().parents[1] / "tools" / "validate_review_form.js"
+    result = subprocess.run([node, str(script)], capture_output=True, text=True,
+                            timeout=120)
+    assert result.returncode == 0, (
+        f"docs/review-form.gs failed validation:\n{result.stdout}\n{result.stderr}")
+    assert "validated against the real FormApp API" in result.stdout

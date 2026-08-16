@@ -91,9 +91,8 @@ function buildReviewForm() {
   var form = FormApp.create(FORM_TITLE)
       .setDescription(FORM_DESCRIPTION)
       .setProgressBar(true)
-      .setCollectEmail(false)
       .setAllowResponseEdits(true)
-      .setShowLinkToRespondAnother(false);
+      .setShowLinkToRespondAgain(false);
 
   form.addTextItem()
       .setTitle('Your name')

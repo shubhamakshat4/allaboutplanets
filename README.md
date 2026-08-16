@@ -194,8 +194,16 @@ python -m tools.generate_review_form    # rules -> docs/review-form.gs
 
 Paste the result into a new project at <https://script.google.com>, run
 `buildReviewForm`, and the execution log prints the edit link, the share link
-and the responses sheet. A test fails if the form drifts from the rules, so it
-always asks about every rule that exists.
+and the responses sheet.
+
+Two checks run with the suite: one fails if the form drifts from the rules, so
+it always asks about every rule that exists; the other runs the script against
+an allowlist stub of the Apps Script API, so a method Google does not publish
+is caught here rather than in the browser.
+
+```bash
+node backend/tools/validate_review_form.js
+```
 
 ## Methodology, stated plainly
 
